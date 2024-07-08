@@ -32,10 +32,12 @@ class NetworkManager: ObservableObject {
                 return
             }
             do {
-                let decodeResponse = try JSONDecoder().decode(ArticleWrapper.self, from: data)
+                let decodeResponse = try JSONDecoder().decode(APIResponse.self, from: data)
                 DispatchQueue.main.async {
                     self.articles = decodeResponse.articles
                     print("Articles fetched successfully")
+                    print("Total count: \(decodeResponse.total_count)")
+                    print("Total pages: \(decodeResponse.total_pages)")
                 }
             } catch {
                 print("Failed to decode JSON: \(error)")

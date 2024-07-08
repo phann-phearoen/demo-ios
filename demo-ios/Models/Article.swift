@@ -24,7 +24,3 @@ struct Article: Codable, Identifiable {
         case date = "published_at"
     }
 }
-
-struct ArticleWrapper: Codable {
-    let articles: [Article]
-}

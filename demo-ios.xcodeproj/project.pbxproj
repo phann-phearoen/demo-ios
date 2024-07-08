@@ -17,6 +17,7 @@
 		22EF1C582C3B75E200A2E825 /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EF1C572C3B75E200A2E825 /* Article.swift */; };
 		22EF1C5A2C3B76C100A2E825 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EF1C592C3B76C100A2E825 /* NetworkManager.swift */; };
 		22EF1C5C2C3BA5B400A2E825 /* ArticleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EF1C5B2C3BA5B400A2E825 /* ArticleView.swift */; };
+		22EF1C642C3BEA9500A2E825 /* APIResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EF1C632C3BEA9500A2E825 /* APIResponse.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +51,7 @@
 		22EF1C572C3B75E200A2E825 /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
 		22EF1C592C3B76C100A2E825 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		22EF1C5B2C3BA5B400A2E825 /* ArticleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleView.swift; sourceTree = "<group>"; };
+		22EF1C632C3BEA9500A2E825 /* APIResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIResponse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +141,7 @@
 			isa = PBXGroup;
 			children = (
 				22EF1C572C3B75E200A2E825 /* Article.swift */,
+				22EF1C632C3BEA9500A2E825 /* APIResponse.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -295,6 +298,7 @@
 				22EF1C5C2C3BA5B400A2E825 /* ArticleView.swift in Sources */,
 				22EF1C2B2C3A297A00A2E825 /* demo_iosApp.swift in Sources */,
 				22EF1C582C3B75E200A2E825 /* Article.swift in Sources */,
+				22EF1C642C3BEA9500A2E825 /* APIResponse.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -458,6 +462,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"demo-ios/Preview Content\"";
+				DEVELOPMENT_TEAM = RN6BP39JVB;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -483,9 +488,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"demo-ios/Preview Content\"";
+				DEVELOPMENT_TEAM = RN6BP39JVB;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -500,6 +507,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "personal.demo-ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -513,6 +521,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RN6BP39JVB;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				MARKETING_VERSION = 1.0;
@@ -532,6 +541,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RN6BP39JVB;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				MARKETING_VERSION = 1.0;
