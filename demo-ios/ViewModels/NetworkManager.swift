@@ -10,8 +10,15 @@ import Foundation
 class NetworkManager: ObservableObject {
     @Published var articles: [Article] = []
     
-    func fetchArticles() {
-        guard let url = URL(string: "https://test-api.salvia-web.com/api/v1/articles/public_index") else {
+    func fetchArticles(page: Int, per: Int) {
+        var urlComponents = URLComponents(string: "https://test-api.salvia-web.com/api/v1/articles/public_index")
+        
+        urlComponents?.queryItems = [
+            URLQueryItem(name: "page", value: String(page)),
+            URLQueryItem(name: "per", value: String(per))
+        ]
+        
+        guard let url = urlComponents?.url else {
             print("Invalid URL")
             return
         }

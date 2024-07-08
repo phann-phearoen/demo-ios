@@ -47,7 +47,7 @@ struct ContentView: View {
             }
             .navigationTitle("Articles")
             .onAppear {
-                networkManager.fetchArticles()
+                networkManager.fetchArticles(page: 1, per: 10)
             }
         }
     }
