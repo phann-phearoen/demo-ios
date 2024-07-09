@@ -9,8 +9,13 @@ import Foundation
 
 class NetworkManager: ObservableObject {
     @Published var articles: [Article] = []
+    @Published var hasMorePages: Bool = true
+    var isLoading: Bool = false
     
     func fetchArticles(page: Int, per: Int) {
+        guard !isLoading else { return }
+        isLoading = true
+        
         var urlComponents = URLComponents(string: "https://test-api.salvia-web.com/api/v1/articles/public_index")
         
         urlComponents?.queryItems = [
@@ -24,6 +29,8 @@ class NetworkManager: ObservableObject {
         }
         
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            defer { self.isLoading = false }
+            
             if let error = error {
                 print("Error fetching data: \(error)")
             }
@@ -34,10 +41,13 @@ class NetworkManager: ObservableObject {
             do {
                 let decodeResponse = try JSONDecoder().decode(APIResponse.self, from: data)
                 DispatchQueue.main.async {
-                    self.articles = decodeResponse.articles
                     print("Articles fetched successfully")
-                    print("Total count: \(decodeResponse.total_count)")
-                    print("Total pages: \(decodeResponse.total_pages)")
+                    if page == 1 {
+                        self.articles = decodeResponse.articles
+                    } else {
+                        self.articles.append(contentsOf: decodeResponse.articles)
+                    }
+                    self.hasMorePages = !decodeResponse.articles.isEmpty
                 }
             } catch {
                 print("Failed to decode JSON: \(error)")

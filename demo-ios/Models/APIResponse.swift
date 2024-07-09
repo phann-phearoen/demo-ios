@@ -11,4 +11,12 @@ struct APIResponse: Codable {
     let articles: [Article]
     let total_count: Int
     let total_pages: Int
+    
+    func hasMorePage(page: Int) -> Bool {
+        if page < self.total_pages {
+            return true
+        } else {
+            return false
+        }
+    }
 }

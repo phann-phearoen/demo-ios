@@ -9,12 +9,13 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var networkManager = NetworkManager()
-    @State private var selectedArticle: Article? = nil
+    @State private var page: Int = 1
+    @State private var per: Int = 10
     
     var body: some View {
         NavigationView {
             ScrollView {
-                LazyVStack {
+                LazyVStack(spacing: 16) {
                     ForEach(networkManager.articles) { article in
                         VStack(alignment: .leading, spacing: 8) {
                             NavigationLink(destination: ArticleView(article: article)) {
@@ -29,6 +30,7 @@ struct ContentView: View {
                                                 .clipped()
                                         } placeholder: {
                                             ProgressView()
+                                    
                                         }
                                     }
                                     .frame(height: 150)
@@ -45,13 +47,34 @@ struct ContentView: View {
                         }
                         .padding(.all)
                     }
+                    if networkManager.hasMorePages {
+                        ProgressView()
+                            .onAppear() {
+                                fetchMoreArticles()
+                            }
+                    }
                 }
+                .padding(.horizontal)
+                .background(GeometryReader { geo -> Color in
+                    DispatchQueue.main.async {
+                        if geo.frame(in: .global).maxY < UIScreen.main.bounds.height {
+                            fetchMoreArticles()
+                        }
+                    }
+                    return Color.clear
+                })
             }
             .navigationTitle("Articles")
             .onAppear {
-                networkManager.fetchArticles(page: 1, per: 20)
+                networkManager.fetchArticles(page: page, per: per)
             }
         }
+    }
+    
+    private func fetchMoreArticles() {
+        guard !networkManager.isLoading else { return }
+        page += 1
+        networkManager.fetchArticles(page: page, per: per)
     }
 }
 
