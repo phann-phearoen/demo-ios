@@ -19,36 +19,51 @@ struct ContentView: View {
   var body: some View {
     NavigationView {
       VStack {
-        if categoryNetworkManager.isLoading && categoryNetworkManager.categories.count == 0 {
-          ProgressView()
-            .padding()
-        } else {
-          ScrollView(.horizontal, showsIndicators: false) {
-            HStack {
-              ForEach(categoryNetworkManager.categories) { category in
-                Button(action: {
-                  toggleCategorySelection(category)
-                }) {
-                  Text(category.title)
-                    .padding(.horizontal)
-                    .background(isCategorySelected(category) ? Color.white : Color.pink)
-                    .foregroundColor(isCategorySelected(category) ? Color.pink : Color.white)
-                    .border(Color.pink)
-                    .cornerRadius(5)
-                }
-              }
-            }
-            .padding(.horizontal)
-            .background(GeometryReader { geo -> Color in
-              DispatchQueue.main.async {
-                if geo.frame(in: .global).maxX < UIScreen.main.bounds.width {
-                  fetchMoreCategories()
-                }
-              }
-              return Color.clear
+        HStack {
+          if selectedCategoryIds.count > 0 {
+            Button(action: {
+              selectedCategoryIds = []
             })
+            {
+              Text("X")
+                .padding(.horizontal)
+                .background(Color.pink)
+                .foregroundColor(Color.white)
+                .border(Color.pink)
+                .cornerRadius(5)
+            }
+          }
+          if categoryNetworkManager.isLoading && categoryNetworkManager.categories.count == 0 {
+            ProgressView()
+              .padding()
+          } else {
+            ScrollView(.horizontal, showsIndicators: false) {
+              HStack {
+                ForEach(categoryNetworkManager.categories) { category in
+                  Button(action: {
+                    toggleCategorySelection(category)
+                  }) {
+                    Text(category.title)
+                      .padding(.horizontal)
+                      .background(isCategorySelected(category) ? Color.white : Color.pink)
+                      .foregroundColor(isCategorySelected(category) ? Color.pink : Color.white)
+                      .border(Color.pink)
+                      .cornerRadius(5)
+                  }
+                }
+              }
+              .background(GeometryReader { geo -> Color in
+                DispatchQueue.main.async {
+                  if geo.frame(in: .global).maxX < UIScreen.main.bounds.width {
+                    fetchMoreCategories()
+                  }
+                }
+                return Color.clear
+              })
+            }
           }
         }
+        .padding(.horizontal)
         
         ScrollView {
           LazyVStack(spacing: 16) {
