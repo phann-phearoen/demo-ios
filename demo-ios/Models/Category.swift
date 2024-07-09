@@ -10,8 +10,6 @@ import Foundation
 struct Category: Codable, Identifiable {
   let id: Int
   let title: String
-  let description: String
-  let slug: String
 }
 
 struct CategoryWrapper: Codable {
