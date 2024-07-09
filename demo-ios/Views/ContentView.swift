@@ -14,6 +14,7 @@ struct ContentView: View {
   @State private var per: Int = 10
   @State private var CPage: Int = 1
   @State private var CPer: Int = 5
+  @State private var selectedCategories: [Category] = []
   
   var body: some View {
     NavigationView {
@@ -25,11 +26,14 @@ struct ContentView: View {
           ScrollView(.horizontal, showsIndicators: false) {
             HStack {
               ForEach(categoryNetworkManager.categories) { category in
-                Button(action: {}) {
+                Button(action: {
+                  toggleCategorySelection(category)
+                }) {
                   Text(category.title)
                     .padding(.horizontal)
-                    .background(Color.pink)
-                    .foregroundColor(.white)
+                    .background(isCategorySelected(category) ? Color.white : Color.pink)
+                    .foregroundColor(isCategorySelected(category) ? Color.pink : Color.white)
+                    .border(Color.pink)
                     .cornerRadius(5)
                 }
               }
@@ -122,6 +126,18 @@ struct ContentView: View {
     guard !categoryNetworkManager.isLoading else { return }
     CPage += 1
     categoryNetworkManager.fetchCategories(page: CPage, per: CPer)
+  }
+  
+  private func toggleCategorySelection(_ category: Category) {
+    if let index = selectedCategories.firstIndex(where: { $0.id == category.id }) {
+      selectedCategories.remove(at: index)
+    } else {
+      selectedCategories.append(category)
+    }
+  }
+  
+  private func isCategorySelected(_ category: Category) -> Bool {
+    return selectedCategories.contains(where: { $0.id == category.id })
   }
 }
 
