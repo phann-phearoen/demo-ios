@@ -8,86 +8,112 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var networkManager = NetworkManager()
-    @State private var page: Int = 1
-    @State private var per: Int = 10
-    
-    var body: some View {
-        NavigationView {
-            ScrollView {
-                LazyVStack(spacing: 16) {
-                    ForEach(networkManager.articles) { article in
-                        VStack(alignment: .leading, spacing: 8) {
-                            NavigationLink(destination: ArticleView(article: article)) {
-                                VStack {
-                                    GeometryReader { geometry in
-                                        AsyncImage(url: URL(string: article.thumbnail)) { image in
-                                            image
-                                                .resizable()
-                                                .aspectRatio(contentMode: .fill)
-                                                .frame(width: geometry.size.width, height: 150)
-                                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                                                .clipped()
-                                        } placeholder: {
-                                            HStack {
-                                                Spacer()
-                                                ProgressView()
-                                                Spacer()
-                                            }
-                                            .frame(maxWidth: .infinity, alignment: .center)
-                                        }
-                                    }
-                                    .frame(height: 150)
-                                    
-                                    Text(article.title)
-                                        .font(.headline)
-                                        .padding(.horizontal)
-                                        .lineLimit(/*@START_MENU_TOKEN@*/2/*@END_MENU_TOKEN@*/)
-                                        .foregroundColor(.primary)
-                                }
-                                .shadow(color: Color.black.opacity(0.2), radius: 10, x: 4, y: 4)
-                            }
-                        }
-                        .padding(.all)
-                    }
-                    if networkManager.hasMorePages {
+  @StateObject private var networkManager = NetworkManager()
+  @StateObject private var categoryNetworkManager = CategoryNetworkManager()
+  @State private var page: Int = 1
+  @State private var per: Int = 10
+  @State private var CPage: Int = 1
+  @State private var CPer: Int = 10
+  
+  var body: some View {
+    NavigationView {
+      VStack {
+        if categoryNetworkManager.isLoading {
+          ProgressView()
+            .padding()
+        } else {
+          ScrollView(.horizontal, showsIndicators: false) {
+            HStack {
+              ForEach(categoryNetworkManager.categories) { category in
+                Button(action: {}) {
+                  Text(category.title)
+                    .padding(.horizontal)
+                    .background(Color.pink)
+                    .foregroundColor(.white)
+                    .cornerRadius(5)
+                }
+              }
+            }
+            .padding(.horizontal)
+          }
+        }
+        
+        ScrollView {
+          LazyVStack(spacing: 16) {
+            ForEach(networkManager.articles) { article in
+              VStack(alignment: .leading, spacing: 8) {
+                NavigationLink(destination: ArticleView(article: article)) {
+                  VStack {
+                    GeometryReader { geometry in
+                      AsyncImage(url: URL(string: article.thumbnail)) { image in
+                        image
+                          .resizable()
+                          .aspectRatio(contentMode: .fill)
+                          .frame(width: geometry.size.width, height: 150)
+                          .clipShape(RoundedRectangle(cornerRadius: 10))
+                          .clipped()
+                      } placeholder: {
                         HStack {
-                            Spacer()
-                            ProgressView()
-                            Spacer()
+                          Spacer()
+                          ProgressView()
+                          Spacer()
                         }
                         .frame(maxWidth: .infinity, alignment: .center)
-                        .onAppear() {
-                            fetchMoreArticles()
-                        }
+                      }
                     }
+                    .frame(height: 150)
+                      
+                      Text(article.title)
+                        .font(.headline)
+                        .padding(.horizontal)
+                        .lineLimit(/*@START_MENU_TOKEN@*/2/*@END_MENU_TOKEN@*/)
+                        .foregroundColor(.primary)
+                  }
+                  .shadow(color: Color.black.opacity(0.2), radius: 10, x: 4, y: 4)
                 }
-                .padding(.horizontal)
-                .background(GeometryReader { geo -> Color in
-                    DispatchQueue.main.async {
-                        if geo.frame(in: .global).maxY < UIScreen.main.bounds.height {
-                            fetchMoreArticles()
-                        }
-                    }
-                    return Color.clear
-                })
+              }
+              .padding(.all)
             }
-            .navigationTitle("Articles")
-            .onAppear {
-                networkManager.fetchArticles(page: page, per: per)
+            if networkManager.hasMorePages {
+              HStack {
+                Spacer()
+                ProgressView()
+                Spacer()
+              }
+              .frame(maxWidth: .infinity, alignment: .center)
+              .onAppear() {
+                fetchMoreArticles()
+              }
             }
+          }
+          .padding(.horizontal)
+          .background(GeometryReader { geo -> Color in
+            DispatchQueue.main.async {
+              if geo.frame(in: .global).maxY < UIScreen.main.bounds.height {
+                fetchMoreArticles()
+              }
+            }
+            return Color.clear
+          })
         }
-    }
-    
-    private func fetchMoreArticles() {
-        guard !networkManager.isLoading else { return }
-        page += 1
+      }
+      .navigationTitle("Articles")
+      .onAppear {
         networkManager.fetchArticles(page: page, per: per)
+        categoryNetworkManager.fetchCategories(page: CPage, per: CPer)
+      }
     }
+  }
+    
+  private func fetchMoreArticles() {
+    guard !networkManager.isLoading else { return }
+    page += 1
+    networkManager.fetchArticles(page: page, per: per)
+  }
 }
 
 struct ContentView_Preview: PreviewProvider{
-    static var previews: some View {
-        ContentView().environmentObject(NetworkManager())
-    }
+  static var previews: some View {
+    ContentView().environmentObject(NetworkManager())
+  }
 }

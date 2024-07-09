@@ -1,22 +1,21 @@
 //
-//  NetworkManager.swift
+//  CategoryNetworkManager.swift
 //  demo-ios
 //
-//  Created by Phearoen Phann on 8/7/24.
+//  Created by Phearoen Phann on 9/7/24.
 //
 
 import Foundation
 
-class NetworkManager: ObservableObject {
-  @Published var articles: [Article] = []
-  @Published var hasMorePages: Bool = true
+class CategoryNetworkManager: ObservableObject {
+  @Published var categories: [Category] = []
   var isLoading: Bool = false
   
-  func fetchArticles(page: Int, per: Int) {
+  func fetchCategories(page: Int, per: Int) {
     guard !isLoading else { return }
     isLoading = true
     
-    var urlComponents = URLComponents(string: "https://test-api.salvia-web.com/api/v1/articles/public_index")
+    var urlComponents = URLComponents(string: "https://test-api.salvia-web.com/api/v1/categories")
     
     urlComponents?.queryItems = [
       URLQueryItem(name: "page", value: String(page)),
@@ -32,22 +31,23 @@ class NetworkManager: ObservableObject {
       defer { self.isLoading = false }
       
       if let error = error {
-        print("Error fetching data: \(error)")
+        print("Error fetching categories: \(error)")
+        return
       }
       guard let data = data else {
         print("No data received")
         return
       }
+      
       do {
-        let decodeResponse = try JSONDecoder().decode(APIResponse.self, from: data)
+        let decodeResponse = try JSONDecoder().decode(CategoryWrapper.self, from: data)
         DispatchQueue.main.async {
-          print("Articles fetched successfully")
+          print("Categories fetched successfully")
           if page == 1 {
-            self.articles = decodeResponse.articles
+            self.categories = decodeResponse.categories
           } else {
-            self.articles.append(contentsOf: decodeResponse.articles)
+            self.categories.append(contentsOf: decodeResponse.categories)
           }
-          self.hasMorePages = !decodeResponse.articles.isEmpty
         }
       } catch {
         print("Failed to decode JSON: \(error)")
