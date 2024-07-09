@@ -9,6 +9,7 @@ import Foundation
 
 class CategoryNetworkManager: ObservableObject {
   @Published var categories: [Category] = []
+  @Published var hasMorePages: Bool = true
   var isLoading: Bool = false
   
   func fetchCategories(page: Int, per: Int) {
@@ -48,6 +49,7 @@ class CategoryNetworkManager: ObservableObject {
           } else {
             self.categories.append(contentsOf: decodeResponse.categories)
           }
+          self.hasMorePages = !decodeResponse.categories.isEmpty
         }
       } catch {
         print("Failed to decode JSON: \(error)")

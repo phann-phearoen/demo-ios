@@ -13,12 +13,12 @@ struct ContentView: View {
   @State private var page: Int = 1
   @State private var per: Int = 10
   @State private var CPage: Int = 1
-  @State private var CPer: Int = 10
+  @State private var CPer: Int = 5
   
   var body: some View {
     NavigationView {
       VStack {
-        if categoryNetworkManager.isLoading {
+        if categoryNetworkManager.isLoading && categoryNetworkManager.categories.count == 0 {
           ProgressView()
             .padding()
         } else {
@@ -35,6 +35,14 @@ struct ContentView: View {
               }
             }
             .padding(.horizontal)
+            .background(GeometryReader { geo -> Color in
+              DispatchQueue.main.async {
+                if geo.frame(in: .global).maxY < UIScreen.main.bounds.width {
+                  fetchMoreCategories()
+                }
+              }
+              return Color.clear
+            })
           }
         }
         
@@ -97,7 +105,6 @@ struct ContentView: View {
           })
         }
       }
-      .navigationTitle("Articles")
       .onAppear {
         networkManager.fetchArticles(page: page, per: per)
         categoryNetworkManager.fetchCategories(page: CPage, per: CPer)
@@ -109,6 +116,12 @@ struct ContentView: View {
     guard !networkManager.isLoading else { return }
     page += 1
     networkManager.fetchArticles(page: page, per: per)
+  }
+  
+  private func fetchMoreCategories() {
+    guard !categoryNetworkManager.isLoading else { return }
+    CPage += 1
+    categoryNetworkManager.fetchCategories(page: CPage, per: CPer)
   }
 }
 
