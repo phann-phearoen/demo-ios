@@ -14,7 +14,7 @@ struct ContentView: View {
   @State private var per: Int = 10
   @State private var CPage: Int = 1
   @State private var CPer: Int = 5
-  @State private var selectedCategories: [Category] = []
+  @State private var selectedCategoryIds: [Int] = []
   
   var body: some View {
     NavigationView {
@@ -52,7 +52,7 @@ struct ContentView: View {
         
         ScrollView {
           LazyVStack(spacing: 16) {
-            ForEach(networkManager.articles) { article in
+            ForEach(filteredArticles) { article in
               VStack(alignment: .leading, spacing: 8) {
                 NavigationLink(destination: ArticleView(article: article)) {
                   VStack {
@@ -86,17 +86,6 @@ struct ContentView: View {
               }
               .padding(.all)
             }
-            if networkManager.hasMorePages {
-              HStack {
-                Spacer()
-                ProgressView()
-                Spacer()
-              }
-              .frame(maxWidth: .infinity, alignment: .center)
-              .onAppear() {
-                fetchMoreArticles()
-              }
-            }
           }
           .padding(.horizontal)
           .background(GeometryReader { geo -> Color in
@@ -129,15 +118,25 @@ struct ContentView: View {
   }
   
   private func toggleCategorySelection(_ category: Category) {
-    if let index = selectedCategories.firstIndex(where: { $0.id == category.id }) {
-      selectedCategories.remove(at: index)
+    if let index = selectedCategoryIds.firstIndex(where: { $0 == category.id }) {
+      selectedCategoryIds.remove(at: index)
     } else {
-      selectedCategories.append(category)
+      selectedCategoryIds.append(category.id)
     }
   }
   
   private func isCategorySelected(_ category: Category) -> Bool {
-    return selectedCategories.contains(where: { $0.id == category.id })
+    return selectedCategoryIds.contains(where: { $0 == category.id })
+  }
+  
+  private var filteredArticles: [Article] {
+    if selectedCategoryIds.isEmpty {
+      return networkManager.articles
+    } else {
+      return networkManager.articles.filter { article in
+        !Set(article.categoryIds).isDisjoint(with: selectedCategoryIds)
+      }
+    }
   }
 }
 

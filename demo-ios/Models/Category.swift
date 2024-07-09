@@ -8,13 +8,14 @@
 import Foundation
 
 struct Category: Codable, Identifiable {
-    let id: Int
-    let title: String
-    let description: String
+  let id: Int
+  let title: String
+  let description: String
+  let slug: String
 }
 
 struct CategoryWrapper: Codable {
-    let categories: [Category]
-    let total_count: Int
-    let total_pages: Int
+  let categories: [Category]
+  let total_count: Int
+  let total_pages: Int
 }
