@@ -29,8 +29,12 @@ struct ContentView: View {
                                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                                                 .clipped()
                                         } placeholder: {
-                                            ProgressView()
-                                    
+                                            HStack {
+                                                Spacer()
+                                                ProgressView()
+                                                Spacer()
+                                            }
+                                            .frame(maxWidth: .infinity, alignment: .center)
                                         }
                                     }
                                     .frame(height: 150)
@@ -43,15 +47,19 @@ struct ContentView: View {
                                 }
                                 .shadow(color: Color.black.opacity(0.2), radius: 10, x: 4, y: 4)
                             }
-                            
                         }
                         .padding(.all)
                     }
                     if networkManager.hasMorePages {
-                        ProgressView()
-                            .onAppear() {
-                                fetchMoreArticles()
-                            }
+                        HStack {
+                            Spacer()
+                            ProgressView()
+                            Spacer()
+                        }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .onAppear() {
+                            fetchMoreArticles()
+                        }
                     }
                 }
                 .padding(.horizontal)
